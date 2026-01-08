@@ -140,7 +140,7 @@ public class TurnoServiceImpl implements TurnoService {
 
         Jornada jornada = turno.getJornada();
 
-        validarTurno(dto, jornada, id); // <--- llamada con id para NO incluirlo en superposición
+        validarTurno(dto, jornada, id);
 
         turno.setFechaHoraInicio(dto.getFechaHoraInicio());
         turno.setFechaHoraFin(dto.getFechaHoraFin());
@@ -168,7 +168,6 @@ public class TurnoServiceImpl implements TurnoService {
             throw new ValidacionException("El turno ya está reservado");
         }
 
-        // OBTENER USUARIO AUTENTICADO DESDE EL JWT
         var paciente = authUtils.getUsuarioActual();
 
         turno.setPaciente(paciente);
@@ -199,9 +198,9 @@ public class TurnoServiceImpl implements TurnoService {
         for (Turno t : turnosExistentes) {
 
             if (turnoIdExcluir != null && t.getId().equals(turnoIdExcluir)) {
-                continue; // ignorar el turno que estoy actualizando
+                continue;
             }
-            // si el turno actual está dentro del rango o lo pisa, solapa
+
             boolean superpone = inicio.isBefore(t.getFechaHoraFin())
                     && fin.isAfter(t.getFechaHoraInicio());
 
@@ -219,24 +218,24 @@ public class TurnoServiceImpl implements TurnoService {
 
         LocalDate fecha = LocalDate.parse(fechaStr);
 
-        // Buscar la jornada del día
+
         Jornada jornada = jornadaRepository
                 .findByFecha(fecha)
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "No hay jornada cargada para el día " + fecha
                 ));
 
-        // Horario jornada
+
         LocalDateTime inicio = jornada.getFecha().atTime(jornada.getHoraInicio());
         LocalDateTime fin = jornada.getFecha().atTime(jornada.getHoraFin());
 
-        // Obtener todos los turnos ya creados para ese día
+
         List<Turno> turnos = turnoRepository.findByJornada_Id(jornada.getId());
 
-        // Lista de horarios a devolver
+
         List<DisponibilidadDiaDTO.HorarioDisponibleDTO> listaHorarios = new ArrayList<>();
 
-        // Recorremos todos los horarios en bloques de 30 min
+
         LocalDateTime actual = inicio;
         while (!actual.isAfter(fin.minusMinutes(30))) {
 
@@ -262,7 +261,7 @@ public class TurnoServiceImpl implements TurnoService {
             actual = actual.plusMinutes(30);
         }
 
-        // DTO final
+
         DisponibilidadDiaDTO dto = new DisponibilidadDiaDTO();
         dto.setFecha(fecha);
         dto.setHorarios(listaHorarios);
@@ -277,7 +276,7 @@ public class TurnoServiceImpl implements TurnoService {
         if (fechaInicioStr == null || fechaInicioStr.isBlank()) {
             fechaInicio = LocalDate.now();
         } else {
-            fechaInicio = LocalDate.parse(fechaInicioStr); // espera formato ISO: yyyy-MM-dd
+            fechaInicio = LocalDate.parse(fechaInicioStr);
         }
 
         List<DisponibilidadDiaDTO> dias = new ArrayList<>();
@@ -285,11 +284,11 @@ public class TurnoServiceImpl implements TurnoService {
         for (int i = 0; i < 7; i++) {
             LocalDate fechaActual = fechaInicio.plusDays(i);
             try {
-                // reutiliza el método que ya implementaste
+
                 DisponibilidadDiaDTO dia = obtenerDisponibilidadPorDia(fechaActual.toString());
                 dias.add(dia);
             } catch (RecursoNoEncontradoException e) {
-                // Si no hay jornada para ese día, devolvemos día vacío (frontend lo muestra como sin horarios)
+
                 DisponibilidadDiaDTO diaSinJornada = new DisponibilidadDiaDTO();
                 diaSinJornada.setFecha(fechaActual);
                 diaSinJornada.setHorarios(new ArrayList<>());

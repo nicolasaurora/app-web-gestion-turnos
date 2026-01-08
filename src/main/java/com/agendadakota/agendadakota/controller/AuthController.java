@@ -42,7 +42,7 @@ public class AuthController {
     @PostMapping("/register")
     public UsuarioDTO register(@RequestBody RegisterRequest req) {
 
-        // email único
+        // email unico
         if (usuarioRepository.findByEmail(req.getEmail()).isPresent()) {
             throw new ValidacionException("El email ya está registrado");
         }
