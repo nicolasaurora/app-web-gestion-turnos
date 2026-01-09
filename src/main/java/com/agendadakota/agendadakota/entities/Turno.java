@@ -31,15 +31,15 @@ public class Turno {
     private Integer duracionMinutos;
 
     @Enumerated(EnumType.STRING)
-    private EstadoTurno estado; // DISPONIBLE, RESERVADO, CANCELADO
+    private EstadoTurno estado;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "paciente_id")
-    private Usuario paciente; // quien reservó (nullable)
+    private Usuario paciente;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profesional_id")
-    private Usuario profesional; // quien realizará el turno (nullable, puede asignarse más tarde)
+    private Usuario profesional;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jornada_id")
@@ -47,7 +47,7 @@ public class Turno {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "servicio_id")
-    private Servicio servicio; // redundante pero útil para queries directas
+    private Servicio servicio;
 
     @Version
     private Long version;

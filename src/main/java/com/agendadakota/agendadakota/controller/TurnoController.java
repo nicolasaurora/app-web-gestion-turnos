@@ -40,7 +40,7 @@ public class TurnoController {
     @PreAuthorize("hasRole('ADMIN', 'PACIENTE', 'PROFESIONAL)")
     @GetMapping("/disponibilidad/semana")
     public ResponseEntity<DisponibilidadSemanaDTO> disponibilidadSemana(
-            @RequestParam(required = false) String inicio // formato: yyyy-MM-dd
+            @RequestParam(required = false) String inicio
     ) {
         return ResponseEntity.ok(turnoService.obtenerDisponibilidadSemana(inicio));
     }
