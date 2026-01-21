@@ -2,6 +2,7 @@ package com.agendadakota.agendadakota.controller;
 
 import com.agendadakota.agendadakota.dto.UsuarioDTO;
 import com.agendadakota.agendadakota.dto.auth.RegisterRequest;
+import com.agendadakota.agendadakota.entities.Rol;
 import com.agendadakota.agendadakota.entities.Usuario;
 import com.agendadakota.agendadakota.exception.ValidacionException;
 import com.agendadakota.agendadakota.repository.UsuarioRepository;
@@ -42,7 +43,6 @@ public class AuthController {
     @PostMapping("/register")
     public UsuarioDTO register(@RequestBody RegisterRequest req) {
 
-        // email unico
         if (usuarioRepository.findByEmail(req.getEmail()).isPresent()) {
             throw new ValidacionException("El email ya está registrado");
         }
@@ -53,7 +53,7 @@ public class AuthController {
         usuario.setNombre(req.getNombre());
         usuario.setApellido(req.getApellido());
         usuario.setTelefono(req.getTelefono());
-        usuario.setRol(req.getRol());
+        usuario.setRol(Rol.PACIENTE);
 
         usuarioRepository.save(usuario);
 
