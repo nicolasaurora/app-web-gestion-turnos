@@ -24,8 +24,8 @@
 		<tbody>
 			{#each turnos as turno}
 				<tr>
-					<td>{turno.fecha}</td>
-					<td>{turno.hora}</td>
+					<td>{turno.fechaHoraInicio?.split('T')[0]}</td>
+					<td>{turno.fechaHoraInicio?.split('T')[1]?.slice(0, 5)}</td>
 					<td>{turno.pacienteNombre}</td>
 					<td>{turno.profesionalNombre}</td>
 					<td>{turno.servicioNombre}</td>
@@ -51,12 +51,12 @@
 		background: white;
 		border-radius: 8px;
 		overflow: hidden;
+		text-align: center;
 	}
 
 	th, td {
 		padding: 0.75rem;
-		text-align: left;
-		border-bottom: 1px solid #eee;
+		border-bottom: 1px solid #cecece;
 	}
 
 	th {
@@ -65,7 +65,7 @@
 	}
 
 	tr:hover {
-		background: #fafafa;
+		background: #ffebd9;
 	}
 
 	.activo {

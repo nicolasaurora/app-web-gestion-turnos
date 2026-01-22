@@ -32,30 +32,22 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 
-                        // Registro y login público
                         .requestMatchers("/auth/**").permitAll()
 
-                        // PROFESIONAL → puede ver turnos y disponibilidad
                         .requestMatchers("/turnos/**", "/agenda/**")
                         .hasAnyRole("PROFESIONAL", "ADMIN")
 
-                        // PACIENTE → reservar y cancelar turnos
                         .requestMatchers(
                                 "/turnos/reservar/**",
                                 "/turnos/cancelar/**",
                                 "/disponibilidad/**"
                         ).hasRole("PACIENTE")
 
-                        // ADMIN → Acceso a todo
-                        //.requestMatchers("/**").hasRole("ADMIN")
-
                         .anyRequest().hasRole("ADMIN")
                 )
                 .formLogin(login -> login.disable())
                 .httpBasic(basic -> basic.disable())
 
-                // IMPORTANTE: agregar filtro JWT ANTES del filtro de login
-                //.addFilterBefore(jwtFilter, SecurityContextHolderFilter.class);
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
